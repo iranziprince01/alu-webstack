@@ -7,7 +7,6 @@ global
         user haproxy
         group haproxy
         daemon
-        maxconn 256
 
         # Added Default
         maxconn 2048
@@ -47,11 +46,11 @@ listen iranziprince
         server 5672-web-02 54.88.203.92:80 check
 frontend www-http
         bind :80
-        reqadd X-Served-By:\ http
+        reqadd X-Forwaded-Proto:\ http
         default_backend web-backend
 frontend www-https
-        bind :443 ssl crt /etc/haproxy/certs/lb-01.iranziprince.tech.pem
-        reqadd X-Served-By:\ https
+        bind :443 ssl crt /etc/haproxy/certs/fullchain.pem
+        reqadd X-Forwaded-Proto:\ https
         default_backend web-backend
 backend web-backend
         redirect scheme https if !{ ssl_fc }

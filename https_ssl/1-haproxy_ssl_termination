@@ -38,14 +38,14 @@ defaults
 	errorfile 503 /etc/haproxy/errors/503.http
 	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend http
+frontend www-http
 	 bind *:80
-	 reqadd X-Forwarded-Proto:\ http
+	 http-request add-header X-Forwarded-Proto: http
 	 default_backend web-backend
 
 frontend www-https
 	 bind *:443 ssl crt /etc/letsencrypt/live/www.iranziprince.tech/fullchain.pem
-	 reqadd X-Forwarded-Proto:\ https
+	 http-request add-header X-Forwarded-Proto:\ https
 	 acl letsencrypt-acl path_beg /.well-known/acme-challenge/
 	 use_backend letsencrypt-backend if letsencrypt-acl
 	 default_backend webservers
@@ -57,4 +57,4 @@ backend webservers
 	server 5672-web-02 54.88.203.92:80 check
 
 backend letsencrypt-backend
-	server letsencrypt 127.0.0.1:8888
+	server letsencrypt 127.0.0.1:54321
